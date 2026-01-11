@@ -1,0 +1,17 @@
+{
+  "name": "Фат Банк",
+  "short_name": "Фат Банк",
+  "description": "Симулятор банківських операцій",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0047ab",
+  "theme_color": "#0047ab",
+  "icons": [
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/university.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фат Банк</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- Аутентифікація -->
+            <div id="authScreen">
+                <div class="auth-box">
+                    <div class="logo">
+                        <i class="fas fa-university"></i>
+                        <h1>🏦 Фат Банк</h1>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('login')">Вхід</button>
+                        <button class="tab-btn" onclick="showTab('register')">Реєстрація</button>
+                    </div>
+                    
+                    <div id="loginForm" class="form active">
+                        <input type="email" id="loginEmail" placeholder="Email" class="input-field">
+                        <input type="password" id="loginPassword" placeholder="Пароль" class="input-field">
+                        <button onclick="login()" class="btn btn-primary">Увійти</button>
+                        <div class="admin-hint">
+                            Для адміна: admin@fatbank.com / admin123
+                        </div>
+                    </div>
+                    
+                    <div id="registerForm" class="form">
+                        <input type="text" id="registerName" placeholder="Ім'я" class="input-field">
+                        <input type="email" id="registerEmail" placeholder="Email" class="input-field">
+                        <input type="password" id="registerPassword" placeholder="Пароль (мінімум 6 символів)" class="input-field">
+                        <button onclick="register()" class="btn btn-primary">Зареєструватись</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Головний інтерфейс -->
+            <div id="mainApp" style="display: none;">
+                <!-- Шапка -->
+                <header class="header">
+                    <div class="logo">
+                        <i class="fas fa-university"></i>
+                        <h2>Фат Банк</h2>
+                    </div>
+                    <div class="user-info">
+                        <span id="userBalance">0 ₴</span>
+                        <button onclick="logout()" class="btn btn-small">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Навігація -->
+                <nav class="nav">
+                    <button onclick="showScreen('home')" class="nav-btn active">
+                        <i class="fas fa-home"></i> Головна
+                    </button>
+                    <button onclick="showScreen('clicker')" class="nav-btn">
+                        <i class="fas fa-mouse-pointer"></i> Клікер
+                    </button>
+                    <button onclick="showScreen('loans')" class="nav-btn">
+                        <i class="fas fa-credit-card"></i> Кредити
+                    </button>
+                    <button onclick="showScreen('transfer')" class="nav-btn">
+                        <i class="fas fa-exchange-alt"></i> Переказ
+                    </button>
+                    <button onclick="showScreen('support')" class="nav-btn">
+                        <i class="fas fa-headset"></i> Підтримка
+                    </button>
+                    <button onclick="showScreen('admin')" id="adminBtn" class="nav-btn" style="display: none;">
+                        <i class="fas fa-user-shield"></i> Адмін
+                    </button>
+                </nav>
+                
+                <!-- Контент -->
+                <main class="content">
+                    <!-- Головна -->
+                    <div id="homeScreen" class="screen active">
+                        <h3>Вітаємо, <span id="userName"></span>!</h3>
+                        <div class="card">
+                            <h4><i class="fas fa-credit-card"></i> Ваша картка</h4>
+                            <div class="card-number" id="userCardNumber">
+                                Завантаження...
+                            </div>
+                            <p>Баланс: <strong id="homeBalance">0 ₴</strong></p>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <h5>Кліків</h5>
+                                <p id="clickCount">0</p>
+                            </div>
+                            <div class="stat">
+                                <h5>Кредити</h5>
+                                <p id="loanCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Клікер -->
+                    <div id="clickerScreen" class="screen">
+                        <h3>Клікер для заробітку</h3>
+                        <p>Кожен клік = 1 гривня</p>
+                        <div class="clicker-area">
+                            <button onclick="clickMoney()" class="clicker-btn">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>Клікни тут!</div>
+                                <small>+1 ₴ за клік</small>
+                            </button>
+                        </div>
+                        <p>Зароблено: <span id="clickerBalance">0</span> ₴</p>
+                    </div>
+                    
+                    <!-- Кредити -->
+                    <div id="loansScreen" class="screen">
+                        <h3>Кредити</h3>
+                        <div class="card">
+                            <h4>Оформити кредит</h4>
+                            <input type="number" id="loanAmount" class="input-field" placeholder="Сума" value="1000" min="100">
+                            <select id="loanTerm" class="input-field">
+                                <option value="3">3 місяці (5%)</option>
+                                <option value="6">6 місяців (10%)</option>
+                                <option value="12">12 місяців (20%)</option>
+                            </select>
+                            <button onclick="takeLoan()" class="btn btn-success">Оформити</button>
+                        </div>
+                        <div class="card">
+                            <h4>Мої кредити</h4>
+                            <div id="loansList">
+                                <p>У вас немає кредитів</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Переказ -->
+                    <div id="transferScreen" class="screen">
+                        <h3>Переказ грошей</h3>
+                        <div class="card">
+                            <h4>Новий переказ</h4>
+                            <input type="text" id="recipientCard" class="input-field" placeholder="Номер картки отримувача">
+                            <input type="number" id="transferAmount" class="input-field" placeholder="Сума">
+                            <button onclick="sendTransfer()" class="btn btn-primary">Надіслати</button>
+                        </div>
+                        <div class="card">
+                            <h4>Історія переказів</h4>
+                            <div id="transferHistory">
+                                <p>Історія відсутня</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Підтримка -->
+                    <div id="supportScreen" class="screen">
+                        <h3>Підтримка</h3>
+                        <div class="card">
+                            <h4>Задати питання</h4>
+                            <input type="text" id="supportSubject" class="input-field" placeholder="Тема">
+                            <textarea id="supportMessage" class="input-field" placeholder="Ваше повідомлення" rows="4"></textarea>
+                            <button onclick="sendSupport()" class="btn btn-primary">Надіслати</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Адмін панель -->
+                    <div id="adminScreen" class="screen">
+                        <h3>Адмін панель</h3>
+                        <div class="admin-tabs">
+                            <button onclick="showAdminTab('users')" class="admin-tab active">Користувачі</button>
+                            <button onclick="showAdminTab('support')" class="admin-tab">Підтримка</button>
+                            <button onclick="showAdminTab('money')" class="admin-tab">Фінанси</button>
+                        </div>
+                        
+                        <div id="adminUsers" class="admin-content active">
+                            <h4>Всі користувачі</h4>
+                            <div id="usersList">
+                                <p>Завантаження...</p>
+                            </div>
+                        </div>
+                        
+                        <div id="adminSupport" class="admin-content">
+                            <h4>Запити в підтримку</h4>
+                            <div id="supportRequests">
+                                <p>Завантаження...</p>
+                            </div>
+                        </div>
+                        
+                        <div id="adminMoney" class="admin-content">
+                            <h4>Керування грошима</h4>
+                            <select id="adminUserSelect" class="input-field">
+                                <option value="">Виберіть користувача</option>
+                            </select>
+                            <input type="number" id="adminAmount" class="input-field" placeholder="Сума" value="100">
+                            <div class="admin-buttons">
+                                <button onclick="adminAddMoney()" class="btn btn-success">Нарахувати</button>
+                                <button onclick="adminRemoveMoney()" class="btn btn-danger">Списати</button>
+                                <button onclick="adminBlockCard()" class="btn btn-warning">Блокувати картку</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Сповіщення -->
+    <div id="notification"></div>
+    
+    <!-- Модальне вікно -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalText"></p>
+            <div id="modalActions"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
